@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Dira Dashboard Setup",
+        "description": "Configure your Dira Dashboard sidebar panel.",
+        "data": {
+          "sidepanel_title": "Sidebar Title",
+          "sidepanel_icon": "Sidebar Icon"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Dira Dashboard is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Dira Dashboard Options",
+        "data": {
+          "sidepanel_title": "Sidebar Title",
+          "sidepanel_icon": "Sidebar Icon"
+        }
+      }
+    }
+  }
+}

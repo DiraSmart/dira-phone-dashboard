@@ -1,0 +1,28 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configurar Dira Dashboard",
+        "description": "Configura el panel de Dira Dashboard en la barra lateral.",
+        "data": {
+          "sidepanel_title": "Titulo en barra lateral",
+          "sidepanel_icon": "Icono en barra lateral"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Dira Dashboard ya esta configurado."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de Dira Dashboard",
+        "data": {
+          "sidepanel_title": "Titulo en barra lateral",
+          "sidepanel_icon": "Icono en barra lateral"
+        }
+      }
+    }
+  }
+}
