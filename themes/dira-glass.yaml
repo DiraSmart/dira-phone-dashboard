@@ -1,0 +1,160 @@
+Dira Glass:
+  # ============================================================
+  # CARD-MOD: Glass-morphism global (aplica a todos los ha-card)
+  # ============================================================
+  card-mod-theme: Dira Glass
+
+  card-mod-card-yaml: |
+    .: |
+      ha-card {
+        background: rgba(20, 20, 30, 0.6) !important;
+        backdrop-filter: blur(20px) saturate(150%) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        box-shadow:
+          0 4px 24px rgba(0, 0, 0, 0.3),
+          0 1px 2px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        transition: all 0.3s ease !important;
+      }
+
+  card-mod-more-info-yaml: |
+    .: |
+      .mdc-dialog .mdc-dialog__scrim,
+      ha-dialog {
+        backdrop-filter: blur(18px) saturate(120%) !important;
+        -webkit-backdrop-filter: blur(18px) saturate(120%) !important;
+      }
+
+  card-mod-view-yaml: |
+    .: |
+      hui-view, hui-masonry-view {
+        background: linear-gradient(160deg, #0a0a14 0%, #0d1117 50%, #0a0f1a 100%) !important;
+        min-height: 100vh;
+      }
+
+  # ============================================================
+  # Paleta principal (cyan/teal accent)
+  # ============================================================
+  primary-color: "#4dd0e1"
+  accent-color: "#4dd0e1"
+  primary-text-color: "rgba(255, 255, 255, 0.95)"
+  secondary-text-color: "rgba(255, 255, 255, 0.55)"
+  disabled-text-color: "rgba(255, 255, 255, 0.25)"
+  text-primary-color: "#ffffff"
+
+  # ============================================================
+  # Backgrounds
+  # ============================================================
+  primary-background-color: "#0a0a14"
+  secondary-background-color: "#0d1117"
+  card-background-color: "rgba(20, 20, 30, 0.6)"
+  paper-card-background-color: "rgba(20, 20, 30, 0.6)"
+
+  # ============================================================
+  # HA Card variables
+  # ============================================================
+  ha-card-background: "rgba(20, 20, 30, 0.6)"
+  ha-card-border-radius: "16px"
+  ha-card-border-width: "0px"
+  ha-card-border-color: "rgba(255, 255, 255, 0.08)"
+  ha-card-box-shadow: "0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2)"
+  ha-card-header-color: "rgba(255, 255, 255, 0.95)"
+  ha-card-header-font-size: "18px"
+
+  # ============================================================
+  # State colors
+  # ============================================================
+  state-active-color: "#ffc107"
+  state-icon-active-color: "#ffc107"
+  state-icon-color: "rgba(255, 255, 255, 0.4)"
+  state-on-color: "#ffc107"
+  state-off-color: "rgba(255, 255, 255, 0.25)"
+
+  # Light entity
+  state-light-active-color: "#ffc107"
+  state-light-on-color: "#ffc107"
+
+  # Climate entity
+  state-climate-cool-color: "#4dd0e1"
+  state-climate-heat-color: "#ff8a65"
+  state-climate-auto-color: "#66bb6a"
+
+  # ============================================================
+  # Sidebar
+  # ============================================================
+  sidebar-icon-color: "rgba(255, 255, 255, 0.4)"
+  sidebar-text-color: "rgba(255, 255, 255, 0.75)"
+  sidebar-background-color: "#0a0a14"
+  sidebar-selected-icon-color: "#4dd0e1"
+  sidebar-selected-text-color: "#4dd0e1"
+
+  # ============================================================
+  # Header / App toolbar
+  # ============================================================
+  app-header-background-color: "rgba(10, 10, 20, 0.85)"
+  app-header-text-color: "rgba(255, 255, 255, 0.95)"
+  app-header-edit-background-color: "#1a1a2e"
+
+  # ============================================================
+  # Dividers / borders
+  # ============================================================
+  divider-color: "rgba(255, 255, 255, 0.06)"
+
+  # ============================================================
+  # Switches and toggles
+  # ============================================================
+  switch-checked-color: "#4dd0e1"
+  switch-unchecked-track-color: "rgba(255, 255, 255, 0.15)"
+  switch-checked-track-color: "rgba(77, 208, 225, 0.3)"
+
+  # ============================================================
+  # Sliders
+  # ============================================================
+  paper-slider-knob-color: "#4dd0e1"
+  paper-slider-active-color: "#4dd0e1"
+  paper-slider-container-color: "rgba(255, 255, 255, 0.12)"
+
+  # ============================================================
+  # Chips
+  # ============================================================
+  chip-background-color: "rgba(255, 255, 255, 0.06)"
+  chip-text-color: "rgba(255, 255, 255, 0.75)"
+
+  # ============================================================
+  # Inputs
+  # ============================================================
+  input-fill-color: "rgba(255, 255, 255, 0.04)"
+  input-ink-color: "rgba(255, 255, 255, 0.9)"
+  input-label-ink-color: "rgba(255, 255, 255, 0.5)"
+  input-disabled-fill-color: "rgba(255, 255, 255, 0.02)"
+
+  # ============================================================
+  # Scrollbar
+  # ============================================================
+  scrollbar-thumb-color: "rgba(255, 255, 255, 0.1)"
+
+  # ============================================================
+  # Ripple
+  # ============================================================
+  mdc-ripple-color: "#4dd0e1"
+
+  # ============================================================
+  # Mushroom-specific variables
+  # ============================================================
+  mush-card-primary-color: "rgba(255, 255, 255, 0.95)"
+  mush-card-secondary-color: "rgba(255, 255, 255, 0.5)"
+  mush-card-primary-font-size: "14px"
+  mush-card-secondary-font-size: "12px"
+  mush-control-border-radius: "12px"
+  mush-chip-background: "rgba(255, 255, 255, 0.06)"
+  mush-chip-border-radius: "20px"
+  mush-chip-padding: "0 10px"
+  mush-chip-icon-size: "16px"
+  mush-chip-font-size: "12px"
+  mush-chip-border-width: "0"
+  mush-rgb-state-light-on: "255, 193, 7"
+  mush-rgb-state-light-off: "255, 255, 255"
+  mush-rgb-state-climate-cool: "77, 208, 225"
+  mush-rgb-state-climate-heat: "255, 138, 101"

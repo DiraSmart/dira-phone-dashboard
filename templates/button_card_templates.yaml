@@ -1,0 +1,355 @@
+# =============================================================================
+# card_room: Tarjeta principal de habitacion para la vista Home
+# Glass background, glow activo, status de AC/temp/luces
+# =============================================================================
+card_room:
+  variables:
+    room_name: "Room"
+    room_icon: "mdi:home-outline"
+    room_navigate: "/lovelace/sala"
+    room_climate: "none"
+    room_temp: "none"
+    room_humidity: "none"
+    room_lights: "none"
+    room_media: "none"
+    room_media_icon: "mdi:cast-audio"
+  triggers_update:
+    - "[[[ return variables.room_climate ]]]"
+    - "[[[ return variables.room_lights ]]]"
+    - "[[[ return variables.room_temp ]]]"
+    - "[[[ return variables.room_humidity ]]]"
+    - "[[[ return variables.room_media ]]]"
+  entity: "[[[ return variables.room_climate !== 'none' ? variables.room_climate : variables.room_temp ]]]"
+  tap_action:
+    action: navigate
+    navigation_path: "[[[ return variables.room_navigate ]]]"
+  show_icon: true
+  show_name: true
+  show_state: false
+  aspect_ratio: 1.3/1
+  icon: "[[[ return variables.room_icon ]]]"
+  name: "[[[ return variables.room_name ]]]"
+  styles:
+    card:
+      - background: "rgba(20, 20, 30, 0.55)"
+      - backdrop-filter: "blur(24px) saturate(150%)"
+      - "-webkit-backdrop-filter": "blur(24px) saturate(150%)"
+      - border: >
+          [[[
+            let glow = false;
+            if (variables.room_climate !== 'none') {
+              let ac = states[variables.room_climate];
+              if (ac && ac.state !== 'off' && ac.state !== 'unavailable') glow = true;
+            }
+            if (variables.room_lights !== 'none') {
+              let lc = states[variables.room_lights];
+              if (lc && parseInt(lc.state) > 0) glow = true;
+            }
+            return glow
+              ? '1px solid rgba(77, 208, 225, 0.2)'
+              : '1px solid rgba(255, 255, 255, 0.07)';
+          ]]]
+      - border-radius: "18px"
+      - padding: "14% 12%"
+      - box-shadow: >
+          [[[
+            let glow = false;
+            if (variables.room_climate !== 'none') {
+              let ac = states[variables.room_climate];
+              if (ac && ac.state !== 'off' && ac.state !== 'unavailable') glow = true;
+            }
+            if (variables.room_lights !== 'none') {
+              let lc = states[variables.room_lights];
+              if (lc && parseInt(lc.state) > 0) glow = true;
+            }
+            return glow
+              ? '0 0 25px rgba(77, 208, 225, 0.12), 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)'
+              : '0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)';
+          ]]]
+      - transition: "all 0.4s ease"
+    grid:
+      - position: relative
+      - grid-template-areas: '"i" "n" "aire" "temp"'
+      - grid-template-columns: 1fr
+      - grid-template-rows: 1fr auto 18px 16px
+    icon:
+      - color: "var(--primary-color)"
+      - width: "42px"
+      - opacity: "0.9"
+      - filter: >
+          [[[
+            let active = false;
+            if (variables.room_climate !== 'none') {
+              let ac = states[variables.room_climate];
+              if (ac && ac.state !== 'off' && ac.state !== 'unavailable') active = true;
+            }
+            if (variables.room_lights !== 'none') {
+              let lc = states[variables.room_lights];
+              if (lc && parseInt(lc.state) > 0) active = true;
+            }
+            return active ? 'drop-shadow(0 0 8px rgba(77, 208, 225, 0.4))' : 'none';
+          ]]]
+    name:
+      - font-weight: "600"
+      - font-size: "15px"
+      - color: "rgba(255, 255, 255, 0.93)"
+      - justify-self: start
+      - padding-top: "6px"
+    custom_fields:
+      aire:
+        - justify-self: start
+        - font-size: "13px"
+        - text-transform: capitalize
+        - padding-bottom: "4px"
+      temp:
+        - justify-self: start
+        - font-size: "12px"
+        - color: "rgba(255, 255, 255, 0.4)"
+      badge_lights:
+        - position: absolute
+        - right: "8%"
+        - top: "6%"
+        - display: flex
+        - align-items: center
+        - gap: "4px"
+      badge_media:
+        - position: absolute
+        - right: "8%"
+        - top: "22%"
+  custom_fields:
+    aire: |
+      [[[
+        if (variables.room_climate === 'none' || !states[variables.room_climate]) return ``;
+        const stateRaw = states[variables.room_climate].state;
+        const modeMap = { heat_cool: 'auto', fan_only: 'fan' };
+        const state = modeMap[stateRaw] || stateRaw;
+        const temp = states[variables.room_climate].attributes.temperature || '';
+        if (state !== "off" && state !== "unavailable") {
+          return `<ha-icon icon="mdi:snowflake"
+                    style="width: 14px; height: 14px; color: #4dd0e1; filter: drop-shadow(0 0 4px rgba(77,208,225,0.5)); animation: spin 3s linear infinite;">
+                  </ha-icon>
+                  <span style="color: rgba(255,255,255,0.75);"> ${state} ${temp ? temp + ' °C' : ''}</span>`;
+        } else {
+          return `<ha-icon icon="mdi:snowflake"
+                    style="width: 14px; height: 14px; color: rgba(255,255,255,0.2);">
+                  </ha-icon>
+                  <span style="color: rgba(255,255,255,0.25);"> off</span>`;
+        }
+      ]]]
+    temp: |
+      [[[
+        if (variables.room_temp === 'none' || !states[variables.room_temp]) return ``;
+        const tempState = states[variables.room_temp].state;
+        if (tempState === "unavailable") return ``;
+        const humedad = variables.room_humidity !== 'none' && states[variables.room_humidity]
+                        ? Math.round(states[variables.room_humidity].state) + '%'
+                        : null;
+        return `<ha-icon icon="mdi:thermometer" style="width: 13px; color: rgba(255,255,255,0.35);"></ha-icon>
+                <span>${tempState}° ${humedad ? ' · ' + humedad : ''}</span>`;
+      ]]]
+    badge_lights: |
+      [[[
+        if (variables.room_lights === 'none' || !states[variables.room_lights]) return ``;
+        const count = parseInt(states[variables.room_lights].state);
+        if (count > 0) {
+          return `<ha-icon icon="mdi:lightbulb"
+                    style="width: 16px; color: #ffc107; filter: drop-shadow(0 0 6px rgba(255,193,7,0.5));">
+                  </ha-icon>
+                  <span style="font-size: 12px; color: #ffc107; font-weight: 600;">${count}</span>`;
+        } else {
+          return `<ha-icon icon="mdi:lightbulb-outline"
+                    style="width: 16px; color: rgba(255,255,255,0.15);">
+                  </ha-icon>`;
+        }
+      ]]]
+    badge_media: |
+      [[[
+        if (variables.room_media === 'none' || !states[variables.room_media]) return ``;
+        const mediaState = states[variables.room_media].state;
+        const icon = variables.room_media_icon;
+        if (mediaState === "on" || mediaState === "playing") {
+          return `<ha-icon icon="${icon}"
+                    style="width: 16px; color: var(--secondary-color); filter: drop-shadow(0 0 4px rgba(77,208,225,0.4));">
+                  </ha-icon>`;
+        }
+        return ``;
+      ]]]
+
+# =============================================================================
+# card_room_compact: Version compacta para rooms secundarios
+# =============================================================================
+card_room_compact:
+  template: card_room
+  aspect_ratio: 1.3/1
+  styles:
+    icon:
+      - width: "36px"
+    name:
+      - font-size: "14px"
+
+# =============================================================================
+# section_header: Separador de seccion glass-morphism
+# Reemplaza bubble-card separators con estilo consistente
+# =============================================================================
+section_header:
+  variables:
+    section_icon: "mdi:lightbulb-group"
+    section_title: "Section"
+  show_icon: true
+  show_name: true
+  show_state: false
+  icon: "[[[ return variables.section_icon ]]]"
+  name: "[[[ return variables.section_title ]]]"
+  tap_action:
+    action: none
+  styles:
+    card:
+      - background: "rgba(255, 255, 255, 0.03)"
+      - backdrop-filter: "blur(12px)"
+      - "-webkit-backdrop-filter": "blur(12px)"
+      - border: "1px solid rgba(255, 255, 255, 0.05)"
+      - border-radius: "12px"
+      - padding: "8px 16px"
+      - box-shadow: "none"
+      - height: "auto"
+      - margin-top: "12px"
+    icon:
+      - color: "#4dd0e1"
+      - width: "20px"
+      - opacity: "0.75"
+    name:
+      - font-size: "12px"
+      - font-weight: "600"
+      - color: "rgba(255, 255, 255, 0.55)"
+      - text-transform: "uppercase"
+      - letter-spacing: "0.1em"
+    grid:
+      - grid-template-areas: "'i n'"
+      - grid-template-columns: "min-content auto"
+      - grid-gap: "10px"
+
+# =============================================================================
+# room_header: Header de vista de room con icono, nombre y boton cerrar
+# =============================================================================
+room_header:
+  variables:
+    header_name: "Room"
+    header_icon: "mdi:home"
+    header_back: "/lovelace/home"
+  show_icon: true
+  show_name: true
+  show_state: false
+  icon: "[[[ return variables.header_icon ]]]"
+  name: "[[[ return variables.header_name ]]]"
+  tap_action:
+    action: none
+  styles:
+    card:
+      - background: "linear-gradient(135deg, rgba(77, 208, 225, 0.15) 0%, rgba(20, 20, 30, 0.7) 100%)"
+      - backdrop-filter: "blur(24px) saturate(150%)"
+      - "-webkit-backdrop-filter": "blur(24px) saturate(150%)"
+      - border: "1px solid rgba(77, 208, 225, 0.12)"
+      - border-radius: "18px"
+      - padding: "16px 20px"
+      - box-shadow: "0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06)"
+    icon:
+      - width: "32px"
+      - color: "#4dd0e1"
+      - opacity: "0.85"
+    name:
+      - font-size: "20px"
+      - font-weight: "600"
+      - color: "rgba(255, 255, 255, 0.95)"
+    grid:
+      - grid-template-areas: "'i n close'"
+      - grid-template-columns: "min-content auto min-content"
+      - grid-gap: "12px"
+      - align-items: "center"
+    custom_fields:
+      close:
+        - color: "rgba(255, 255, 255, 0.4)"
+  custom_fields:
+    close: |
+      [[[
+        return `<ha-icon icon="mdi:close-circle"
+                  style="width: 28px; color: rgba(255,255,255,0.35); cursor: pointer;">
+                </ha-icon>`;
+      ]]]
+
+# =============================================================================
+# tv_button: Boton individual del control remoto TV (glass style)
+# =============================================================================
+tv_button:
+  variables:
+    btn_icon: "mdi:power"
+    btn_command: "power"
+    btn_service: "script.remote_tv_samsung"
+    btn_lugar: "principal"
+    btn_color: "rgba(255, 255, 255, 0.7)"
+  show_icon: true
+  show_name: false
+  icon: "[[[ return variables.btn_icon ]]]"
+  tap_action:
+    action: call-service
+    service: "[[[ return variables.btn_service ]]]"
+    service_data:
+      command: "[[[ return variables.btn_command ]]]"
+      lugar: "[[[ return variables.btn_lugar ]]]"
+  styles:
+    card:
+      - background: "rgba(255, 255, 255, 0.05)"
+      - backdrop-filter: "blur(12px)"
+      - "-webkit-backdrop-filter": "blur(12px)"
+      - border: "1px solid rgba(255, 255, 255, 0.06)"
+      - border-radius: "14px"
+      - box-shadow: "none"
+      - height: "55px"
+    icon:
+      - color: "[[[ return variables.btn_color ]]]"
+      - width: "24px"
+
+# =============================================================================
+# appliance_status: Tarjeta de estado de electrodomestico (lavadora/secadora)
+# =============================================================================
+appliance_status:
+  variables:
+    app_entity: "sensor.state_lavadora"
+    app_name: "Lavadora"
+    app_icon_off: "mdi:washing-machine-off"
+    app_icon_on: "mdi:washing-machine"
+    app_active_state: "washing"
+  entity: "[[[ return variables.app_entity ]]]"
+  show_icon: true
+  show_name: true
+  show_state: true
+  name: "[[[ return variables.app_name ]]]"
+  icon: |
+    [[[
+      const s = entity ? entity.state : 'off';
+      return s === variables.app_active_state ? variables.app_icon_on : variables.app_icon_off;
+    ]]]
+  styles:
+    card:
+      - background: "rgba(255, 255, 255, 0.03)"
+      - border: "1px solid rgba(255, 255, 255, 0.05)"
+      - border-radius: "14px"
+      - box-shadow: "none"
+      - height: "100px"
+    icon:
+      - color: |
+          [[[
+            const s = entity ? entity.state : 'off';
+            if (s === variables.app_active_state) return '#ffc107';
+            if (s === 'standby') return 'rgba(255,255,255,0.4)';
+            return 'rgba(255,255,255,0.15)';
+          ]]]
+      - animation: |
+          [[[
+            return entity && entity.state === variables.app_active_state
+              ? 'blink 2s ease infinite' : 'none';
+          ]]]
+    name:
+      - font-size: "13px"
+    state:
+      - font-size: "13px"
+      - text-transform: "capitalize"

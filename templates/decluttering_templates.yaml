@@ -1,0 +1,494 @@
+# =============================================================================
+# room_title: Header completo de subview con nombre, icono y boton cerrar
+# =============================================================================
+room_title:
+  default:
+    - title: "Room"
+    - icon: "mdi:home"
+    - back_url: /lovelace
+  card:
+    type: custom:stack-in-card
+    mode: horizontal
+    cards:
+      - type: custom:button-card
+        color_type: card
+        color: transparent
+        icon: "[[icon]]"
+        styles:
+          icon:
+            - width: 28px
+            - color: white
+            - filter: "drop-shadow(0 0 6px rgba(77, 208, 225, 0.3))"
+          card:
+            - width: 60px
+            - height: 100%
+            - border-style: none
+            - background: transparent
+            - box-shadow: none
+      - type: custom:button-card
+        color_type: card
+        name: "[[title]]"
+        color: transparent
+        styles:
+          name:
+            - font-weight: "600"
+            - font-size: 18px
+            - color: white
+            - letter-spacing: "0.02em"
+          card:
+            - border-style: none
+            - height: 48px
+            - background: transparent
+            - box-shadow: none
+      - type: custom:button-card
+        color_type: card
+        icon: mdi:close-circle
+        color: transparent
+        styles:
+          icon:
+            - width: 26px
+            - color: "rgba(255, 255, 255, 0.5)"
+          card:
+            - border-style: none
+            - width: 60px
+            - height: 100%
+            - background: transparent
+            - box-shadow: none
+        tap_action:
+          action: navigate
+          navigation_path: "[[back_url]]"
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(77, 208, 225, 0.12) 0%, rgba(20, 20, 30, 0.7) 100%) !important;
+          backdrop-filter: blur(24px) saturate(150%) !important;
+          -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+          border: 1px solid rgba(77, 208, 225, 0.1) !important;
+          border-radius: 18px !important;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+        }
+
+# =============================================================================
+# auto_lights_grid: Descubre luces automaticamente por Area de HA
+# Genera mushroom-light-cards en grid de 2 columnas
+# =============================================================================
+auto_lights_grid:
+  default:
+    - area_name: "Sala"
+  card:
+    type: custom:auto-entities
+    filter:
+      include:
+        - domain: light
+          area: "[[area_name]]"
+          options:
+            type: custom:mushroom-light-card
+            fill_container: true
+            show_brightness_control: true
+            show_color_control: false
+            show_color_temp_control: false
+            collapsible_controls: true
+            layout: vertical
+            card_mod:
+              style: |
+                ha-card {
+                  background: rgba(255, 255, 255, 0.03) !important;
+                  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+                  border-radius: 14px !important;
+                  backdrop-filter: blur(12px) !important;
+                  -webkit-backdrop-filter: blur(12px) !important;
+                  box-shadow: none !important;
+                }
+      exclude:
+        - state: "unavailable"
+    sort:
+      method: name
+    show_empty: false
+    card:
+      type: grid
+      columns: 2
+      square: false
+    card_param: cards
+
+# =============================================================================
+# aire_section: Seccion completa de aire acondicionado
+# Section header + dira-thermostat
+# =============================================================================
+aire_section:
+  default:
+    - climate_entity: "climate.ac_sala"
+    - thermostat_name: "Aire"
+    - popup: "true"
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:button-card
+        template: section_header
+        variables:
+          section_icon: "mdi:air-conditioner"
+          section_title: "Aire"
+      - type: custom:dira-thermostat
+        entity: "[[climate_entity]]"
+        name: "[[thermostat_name]]"
+        popup: "[[popup]]"
+        control:
+          hvac: true
+          preset: false
+
+# =============================================================================
+# cortinas_section: Descubre cortinas/covers por Area
+# =============================================================================
+cortinas_section:
+  default:
+    - area_name: "Sala"
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:button-card
+        template: section_header
+        variables:
+          section_icon: "mdi:blinds-horizontal"
+          section_title: "Cortinas"
+      - type: custom:auto-entities
+        filter:
+          include:
+            - domain: cover
+              area: "[[area_name]]"
+              options:
+                type: custom:mushroom-cover-card
+                show_buttons_control: true
+                show_position_control: true
+                fill_container: true
+                card_mod:
+                  style: |
+                    ha-card {
+                      background: rgba(255, 255, 255, 0.03) !important;
+                      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+                      border-radius: 14px !important;
+                      box-shadow: none !important;
+                    }
+          exclude:
+            - state: "unavailable"
+        show_empty: false
+        card:
+          type: grid
+          columns: 1
+          square: false
+        card_param: cards
+
+# =============================================================================
+# media_section: Seccion de media player
+# Section header + mini-media-player o mediocre-media-player
+# =============================================================================
+media_section:
+  default:
+    - media_entity: "media_player.sala"
+    - use_mediocre: "false"
+    - ma_entity: ""
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:button-card
+        template: section_header
+        variables:
+          section_icon: "mdi:music"
+          section_title: "Media"
+      - type: custom:mini-media-player
+        entity: "[[media_entity]]"
+        artwork: cover
+        source: icon
+        volume_stateless: false
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255, 255, 255, 0.03) !important;
+              border: 1px solid rgba(255, 255, 255, 0.05) !important;
+              border-radius: 14px !important;
+              box-shadow: none !important;
+            }
+
+# =============================================================================
+# mediocre_media_section: Seccion de media con mediocre-media-player-card
+# Para rooms con busqueda de musica
+# =============================================================================
+mediocre_media_section:
+  default:
+    - media_entity: "media_player.sala"
+    - ma_entity: ""
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:button-card
+        template: section_header
+        variables:
+          section_icon: "mdi:music"
+          section_title: "Musica"
+      - type: custom:mediocre-media-player-card
+        entity_id: "[[media_entity]]"
+        use_art_colors: true
+        search:
+          enabled: true
+          show_favorites: false
+        ma_entity_id: "[[ma_entity]]"
+
+# =============================================================================
+# tv_section: Seccion de TV con controles rapidos y popup de control remoto
+# =============================================================================
+tv_section:
+  default:
+    - popup_hash: "#tv_remote"
+    - tv_state_entity: "sensor.state_tv_principal"
+    - plug_entity: "switch.plug_tv_principal"
+    - remote_service: "script.remote_tv_samsung"
+    - lugar: "principal"
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:button-card
+        template: section_header
+        variables:
+          section_icon: "mdi:television"
+          section_title: "TV"
+      - type: custom:stack-in-card
+        mode: horizontal
+        cards:
+          - type: custom:mushroom-template-card
+            entity: "[[tv_state_entity]]"
+            icon: mdi:remote
+            icon_color: |-
+              {% if states("[[tv_state_entity]]") == "on" %}
+                cyan
+              {% else %}
+                grey
+              {% endif %}
+            primary: Control TV
+            secondary: '{{states("[[tv_state_entity]]")}}'
+            tap_action:
+              action: navigate
+              navigation_path: "[[popup_hash]]"
+            card_mod:
+              style: |
+                ha-card {
+                  border: none !important;
+                  background: transparent !important;
+                  box-shadow: none !important;
+                }
+          - type: horizontal-stack
+            cards:
+              - type: custom:mushroom-template-card
+                entity: "[[plug_entity]]"
+                icon: mdi:power-plug
+                icon_color: '{{ "" if states(entity) == "on" else "red" }}'
+                tap_action:
+                  action: toggle
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      background: transparent !important;
+                      box-shadow: none !important;
+                    }
+              - type: custom:mushroom-template-card
+                icon: mdi:power
+                tap_action:
+                  action: call-service
+                  service: "[[remote_service]]"
+                  service_data:
+                    command: power
+                    lugar: "[[lugar]]"
+                card_mod:
+                  style: |
+                    ha-card {
+                      border: none !important;
+                      background: transparent !important;
+                      box-shadow: none !important;
+                    }
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255, 255, 255, 0.03) !important;
+              border: 1px solid rgba(255, 255, 255, 0.05) !important;
+              border-radius: 14px !important;
+              box-shadow: none !important;
+            }
+
+# =============================================================================
+# tv_remote_popup: Popup completo de control remoto TV
+# =============================================================================
+tv_remote_popup:
+  default:
+    - popup_hash: "#tv_remote"
+    - popup_name: "TV Control"
+    - remote_service: "script.remote_tv_samsung"
+    - lugar: "principal"
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:bubble-card
+        card_type: pop-up
+        hash: "[[popup_hash]]"
+        name: "[[popup_name]]"
+        icon: mdi:remote
+        styles: |
+          .bubble-pop-up {
+            background: rgba(15, 15, 25, 0.92) !important;
+            backdrop-filter: blur(28px) saturate(150%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+          }
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:power
+              btn_command: power
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+              btn_color: "#ff5252"
+          - type: custom:button-card
+            color_type: blank-card
+            styles:
+              card:
+                - background: transparent
+                - box-shadow: none
+                - border: none
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:location-enter
+              btn_command: source
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            color_type: blank-card
+            styles:
+              card:
+                - background: transparent
+                - box-shadow: none
+                - border: none
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:chevron-up
+              btn_command: up
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+          - type: custom:button-card
+            color_type: blank-card
+            styles:
+              card:
+                - background: transparent
+                - box-shadow: none
+                - border: none
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:chevron-left
+              btn_command: left
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:circle-small
+              btn_command: enter
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+              btn_color: "#4dd0e1"
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:chevron-right
+              btn_command: right
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            color_type: blank-card
+            styles:
+              card:
+                - background: transparent
+                - box-shadow: none
+                - border: none
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:chevron-down
+              btn_command: down
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+          - type: custom:button-card
+            color_type: blank-card
+            styles:
+              card:
+                - background: transparent
+                - box-shadow: none
+                - border: none
+      - type: horizontal-stack
+        cards:
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:home-export-outline
+              btn_command: exit
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:volume-off
+              btn_command: mute
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+          - type: custom:button-card
+            template: tv_button
+            variables:
+              btn_icon: mdi:volume-plus
+              btn_command: volume_up
+              btn_service: "[[remote_service]]"
+              btn_lugar: "[[lugar]]"
+
+# =============================================================================
+# lavanderia_section: Seccion de lavadora y secadora
+# =============================================================================
+lavanderia_section:
+  card:
+    type: vertical-stack
+    cards:
+      - type: custom:button-card
+        template: section_header
+        variables:
+          section_icon: "mdi:tumble-dryer"
+          section_title: "Lavanderia"
+      - type: custom:stack-in-card
+        mode: horizontal
+        cards:
+          - type: custom:button-card
+            template: appliance_status
+            variables:
+              app_entity: sensor.state_lavadora
+              app_name: Lavadora
+              app_icon_off: mdi:washing-machine-off
+              app_icon_on: mdi:washing-machine
+              app_active_state: washing
+          - type: custom:button-card
+            template: appliance_status
+            variables:
+              app_entity: sensor.state_secadora
+              app_name: Secadora
+              app_icon_off: mdi:tumble-dryer-off
+              app_icon_on: mdi:tumble-dryer
+              app_active_state: drying
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255, 255, 255, 0.03) !important;
+              border: 1px solid rgba(255, 255, 255, 0.05) !important;
+              border-radius: 14px !important;
+              box-shadow: none !important;
+            }

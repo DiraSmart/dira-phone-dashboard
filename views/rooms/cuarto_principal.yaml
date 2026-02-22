@@ -1,0 +1,63 @@
+title: Cuarto Principal
+path: cuarto-principal
+icon: mdi:bed-king
+type: custom:vertical-layout
+cards:
+  # ---- Room Title ----
+  - type: custom:decluttering-card
+    template: room_title
+    variables:
+      - title: Rec Principal
+      - icon: mdi:bed-king
+      - back_url: /lovelace
+
+  # ---- Aire Acondicionado ----
+  - type: custom:decluttering-card
+    template: aire_section
+    variables:
+      - climate_entity: climate.ac_cuarto_principal
+      - thermostat_name: Aire Rec Principal
+      - popup: "true"
+
+  # ---- TV ----
+  - type: custom:decluttering-card
+    template: tv_section
+    variables:
+      - popup_hash: "#tvprincipal"
+      - tv_state_entity: sensor.state_tv_principal
+      - plug_entity: switch.plug_tv_principal
+      - remote_service: script.remote_tv_samsung
+      - lugar: principal
+
+  # ---- Luces (auto-discovery por area) ----
+  - type: custom:button-card
+    template: section_header
+    variables:
+      section_icon: "mdi:lightbulb-group"
+      section_title: "Luces"
+
+  - type: custom:decluttering-card
+    template: auto_lights_grid
+    variables:
+      - area_name: "Cuarto Principal"
+
+  # ---- Bano ----
+  - type: custom:button-card
+    template: section_header
+    variables:
+      section_icon: "mdi:bathtub"
+      section_title: "Bano"
+
+  - type: custom:decluttering-card
+    template: auto_lights_grid
+    variables:
+      - area_name: "Bano Principal"
+
+  # ---- TV Remote Popup ----
+  - type: custom:decluttering-card
+    template: tv_remote_popup
+    variables:
+      - popup_hash: "#tvprincipal"
+      - popup_name: TV Rec Principal
+      - remote_service: script.remote_tv_samsung
+      - lugar: principal

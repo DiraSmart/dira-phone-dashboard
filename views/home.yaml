@@ -1,0 +1,348 @@
+title: Home
+path: home
+icon: ds:logo
+type: custom:vertical-layout
+cards:
+  # ================================================================
+  # Weather card (glass transparent)
+  # ================================================================
+  - show_current: true
+    show_forecast: false
+    name: Panama City
+    type: weather-forecast
+    entity: weather.forecast_casa
+    secondary_info_attribute: humidity
+    forecast_type: daily
+    card_mod:
+      style: |
+        ha-card {
+          background: rgba(255, 255, 255, 0.03) !important;
+          border: 1px solid rgba(255, 255, 255, 0.05) !important;
+          border-radius: 18px !important;
+          box-shadow: none !important;
+        }
+        ha-card div.name, ha-card div.attribute {
+          color: var(--primary-color);
+        }
+
+  # ================================================================
+  # Chips bar: door, calendar, parsha, settings
+  # ================================================================
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: template
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/door
+        hold_action:
+          action: none
+        icon: mdi:door-closed
+        icon_color: |-
+          {% if is_state('binary_sensor.puerta_entrada', 'on') %}
+            red
+          {% endif %}
+        card_mod:
+          style: |
+            ha-card {
+              --chip-background: rgba(255, 255, 255, 0.04);
+              --chip-border-color: rgba(255, 255, 255, 0.06);
+              --chip-border-radius: 20px;
+            }
+      - type: entity
+        entity: sensor.jewish_calendar_date_no_year
+        icon: mdi:calendar
+        tap_action:
+          action: navigate
+          navigation_path: "#zmanim"
+        card_mod:
+          style: |
+            ha-card {
+              --chip-background: rgba(255, 255, 255, 0.04);
+              --chip-border-color: rgba(255, 255, 255, 0.06);
+              --chip-font-size: 12px;
+            }
+      - type: entity
+        entity: sensor.jewish_calendar_parshat_hashavua
+        tap_action:
+          action: none
+        card_mod:
+          style: |
+            ha-card {
+              --chip-background: rgba(255, 255, 255, 0.04);
+              --chip-border-color: rgba(255, 255, 255, 0.06);
+              --chip-font-size: 12px;
+            }
+      - type: action
+        tap_action:
+          action: navigate
+          navigation_path: /lovelace/settings
+        hold_action:
+          action: none
+        icon: mdi:cog
+        card_mod:
+          style: |
+            ha-card {
+              --chip-background: rgba(255, 255, 255, 0.04);
+              --chip-border-color: rgba(255, 255, 255, 0.06);
+            }
+    alignment: justify
+    card_mod:
+      style: |
+        ha-card {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          min-width: 50px;
+        }
+
+  # ================================================================
+  # Omer conditional
+  # ================================================================
+  - type: conditional
+    conditions:
+      - condition: and
+        conditions:
+          - condition: state
+            entity: sensor.jewish_calendar_day_of_the_omer
+            state_not: "0"
+          - condition: state
+            entity: sensor.jewish_calendar_day_of_the_omer
+            state_not: unknown
+          - condition: state
+            entity: sensor.jewish_calendar_day_of_the_omer
+            state_not: unavailable
+    card:
+      type: entities
+      entities:
+        - entity: sensor.jewish_calendar_day_of_the_omer
+          name: "Dia del Omer"
+          tap_action:
+            action: none
+
+  # ================================================================
+  # Iom Tov conditional
+  # ================================================================
+  - type: conditional
+    conditions:
+      - entity: sensor.iom_tov
+        state: "on"
+    card:
+      type: entities
+      entities:
+        - entity: sensor.jewish_calendar_holiday
+          name: Iom Tov
+          tap_action:
+            action: none
+
+  # ================================================================
+  # Shabat section conditional
+  # ================================================================
+  - type: conditional
+    conditions:
+      - condition: or
+        conditions:
+          - entity: sensor.mostrar_horarios_de_shabat
+            state: "on"
+          - entity: input_boolean.shabat_forzar_mostrar
+            state: "on"
+    card:
+      type: vertical-stack
+      cards:
+        - show_name: true
+          show_icon: true
+          show_state: true
+          type: glance
+          entities:
+            - entity: sensor.jewish_calendar_upcoming_candle_lighting
+              format: time
+              name: Encendido velas
+              tap_action:
+                action: none
+            - entity: sensor.jewish_calendar_upcoming_havdalah
+              format: time
+              name: Finaliza
+              tap_action:
+                action: none
+          state_color: false
+          columns: 2
+        - type: entities
+          entities:
+            - type: simple-entity
+              entity: input_boolean.shabat
+              icon: mdi:power-plug
+              name: Modo Shabat
+              tap_action:
+                action: none
+              hold_action:
+                action: call-service
+                confirmation:
+                  text: Cambiar modo shabat
+                service: input_boolean.toggle
+                target:
+                  entity_id: input_boolean.shabat
+            - type: conditional
+              conditions:
+                - entity: input_boolean.shabat
+                  state: "on"
+              row:
+                type: custom:multiple-entity-row
+                entity: input_boolean.shabat_almuerzo
+                state_header: Almuerzo
+                name: Comidas
+                icon: mdi:food-turkey
+                toggle: true
+                state_color: false
+                tap_action:
+                  action: none
+                entities:
+                  - entity: input_boolean.shabat_cena
+                    name: Cena
+                    toggle: true
+
+  # ================================================================
+  # Room cards grid (2 columnas)
+  # ================================================================
+  - square: false
+    type: grid
+    columns: 2
+    cards:
+      - type: custom:button-card
+        template: card_room
+        variables:
+          room_name: "Sala"
+          room_icon: "mdi:sofa"
+          room_navigate: "/lovelace/sala"
+          room_climate: climate.t6_pro_z_wave_programmable_thermostat_with_smartstart
+          room_temp: sensor.t6_pro_z_wave_programmable_thermostat_with_smartstart_air_temperature
+          room_humidity: sensor.t6_pro_z_wave_programmable_thermostat_with_smartstart_humidity
+          room_lights: sensor.lights_sala_on
+          room_media: media_player.dietpi_airplay
+          room_media_icon: "mdi:cast-audio"
+
+      - type: custom:button-card
+        template: card_room
+        variables:
+          room_name: "Cocina"
+          room_icon: "mdi:stove"
+          room_navigate: "/lovelace/cocina"
+          room_climate: climate.ac_cocina
+          room_temp: sensor.sensor_temp_cocina_temperature
+          room_humidity: sensor.sensor_temp_cocina_humidity
+          room_lights: sensor.lights_cocina_on
+          room_media: media_player.cocina_2
+          room_media_icon: "mdi:cast-audio"
+
+      - type: custom:button-card
+        template: card_room
+        variables:
+          room_name: "Rec Principal"
+          room_icon: "mdi:bed-king"
+          room_navigate: "/lovelace/cuarto-principal"
+          room_climate: climate.ac_cuarto_principal
+          room_temp: sensor.sonoff_rec_principal_temperature
+          room_humidity: sensor.sonoff_rec_principal_humidity
+          room_lights: sensor.lights_principal_on
+          room_media: sensor.state_tv_principal
+          room_media_icon: "mdi:television-shimmer"
+
+      - type: custom:button-card
+        template: card_room
+        variables:
+          room_name: "Moishy Mushka"
+          room_icon: "phu:monzo"
+          room_navigate: "/lovelace/cuarto-ninos"
+          room_climate: climate.ac_cuarto_ninos
+          room_temp: sensor.rec_ninos_temperature
+          room_humidity: sensor.rec_ninos_humidity
+          room_lights: sensor.lights_ninos_on
+          room_media: "none"
+          room_media_icon: "none"
+
+      - type: custom:button-card
+        template: card_room
+        variables:
+          room_name: "Sche y Mendy"
+          room_icon: "mdi:sony-playstation"
+          room_navigate: "/lovelace/juegos"
+          room_climate: climate.ac_cuarto_juegos
+          room_temp: sensor.sonoff_juegos_temperature
+          room_humidity: sensor.sonoff_juegos_humidity
+          room_lights: sensor.lights_juegos_on
+          room_media: sensor.state_tv_juegos
+          room_media_icon: "mdi:television-shimmer"
+
+      - type: custom:button-card
+        template: card_room
+        variables:
+          room_name: "Otros"
+          room_icon: "mdi:door"
+          room_navigate: "/lovelace/otros"
+          room_climate: "none"
+          room_temp: "none"
+          room_humidity: "none"
+          room_lights: sensor.lights_otros_on
+          room_media: fan.ds03_speed
+          room_media_icon: "mdi:fan"
+
+  # ================================================================
+  # Powered by logo
+  # ================================================================
+  - type: custom:button-card
+    entity_picture: |
+      [[[
+        if (hass.themes.darkMode)
+          return `/local/images//powereddark.png`
+        else
+          return `/local/images//poweredlight.png`
+      ]]]
+    show_entity_picture: true
+    hold_action:
+      action: none
+    tap_action:
+      action: none
+    styles:
+      card:
+        - border-radius: 0px
+        - border: none
+        - box-shadow: none
+        - padding: 0px 0px 0px 200px
+        - margin: 0px 0px
+        - background: transparent !important
+
+  # ================================================================
+  # Zmanim popup (cumpleanos)
+  # ================================================================
+  - type: vertical-stack
+    cards:
+      - type: custom:bubble-card
+        card_type: pop-up
+        hash: "#zmanim"
+        name: Fechas Importantes
+        icon: mdi:calendar
+        styles: |
+          .bubble-pop-up {
+            background: rgba(15, 15, 25, 0.92) !important;
+            backdrop-filter: blur(28px) saturate(150%) !important;
+            -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+          }
+      - type: custom:auto-entities
+        card:
+          type: entities
+          header:
+            type: picture
+            image: >-
+              https://www.home-assistant.io/images/lovelace/header-footer/balloons-header.png
+            tap_action:
+              action: none
+            hold_action:
+              action: none
+          state_color: false
+          show_header_toggle: true
+        filter:
+          include:
+            - name: "Cumple*"
+            - name: Aniversario
+          exclude: []
+        sort:
+          attribute: date
+          method: attribute

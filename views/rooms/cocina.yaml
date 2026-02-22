@@ -1,0 +1,140 @@
+title: Cocina
+path: cocina
+icon: mdi:stove
+type: custom:vertical-layout
+cards:
+  # ---- Room Title ----
+  - type: custom:decluttering-card
+    template: room_title
+    variables:
+      - title: Cocina
+      - icon: mdi:stove
+      - back_url: /lovelace
+
+  # ---- Aire Acondicionado ----
+  - type: custom:decluttering-card
+    template: aire_section
+    variables:
+      - climate_entity: climate.ac_cocina
+      - thermostat_name: Aire Cocina
+      - popup: "true"
+
+  # ---- Horno (conditional: solo visible cuando esta activo) ----
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: sensor.horno_oven_job_state
+        state_not: ready
+    card:
+      type: custom:stack-in-card
+      mode: horizontal
+      cards:
+        - type: custom:mushroom-template-card
+          primary: Estado
+          secondary: |-
+            {% if states("sensor.horno_oven_job_state") == "preheat" %}
+              Precalentando
+            {% elif states("sensor.horno_oven_job_state") == "cooking" %}
+              Encendido
+            {% else %}
+              Off
+            {% endif %}
+          icon: mdi:stove
+          icon_color: |-
+            {% if states("sensor.horno_oven_job_state") == "preheat" %}
+              green
+            {% elif states("sensor.horno_oven_job_state") == "cooking" %}
+              red
+            {% else %}
+              grey
+            {% endif %}
+          layout: vertical
+          entity: sensor.horno_oven_job_state
+          tap_action:
+            action: more-info
+          card_mod:
+            style: |
+              ha-card { border: none !important; background: transparent !important; box-shadow: none !important; }
+        - type: custom:mushroom-template-card
+          primary: >-
+            {{states('sensor.horno_temperature_measurement')}} /
+            {{states('sensor.horno_oven_set_point')}}
+          secondary: Fahrenheit
+          icon: mdi:thermometer
+          layout: vertical
+          entity: sensor.horno_temperature_measurement
+          tap_action:
+            action: more-info
+          card_mod:
+            style: |
+              ha-card { border: none !important; background: transparent !important; box-shadow: none !important; }
+        - type: custom:mushroom-template-card
+          primary: >-
+            {% set t = as_timestamp(states('sensor.horno_oven_completion_time')) %}
+            {% set duration = ((t - now().timestamp())/60) | round(0) %}
+            {{duration}} min
+          secondary: >-
+            {% set t = as_timestamp(states('sensor.horno_oven_completion_time')) %}
+            {% set end = t | timestamp_custom("%H:%M") %}
+            A las {{end}}
+          icon: mdi:clock
+          layout: vertical
+          entity: sensor.temporizador_horno
+          tap_action:
+            action: more-info
+          card_mod:
+            style: |
+              ha-card { border: none !important; background: transparent !important; box-shadow: none !important; }
+      card_mod:
+        style: |
+          ha-card {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: 14px !important;
+            box-shadow: none !important;
+          }
+
+  # ---- Monitor Bebe ----
+  - type: grid
+    columns: 1
+    square: false
+    cards:
+      - type: custom:mushroom-entity-card
+        entity: switch.plug_cocina
+        icon: mdi:cctv
+        tap_action:
+          action: toggle
+        hold_action:
+          action: more-info
+        name: Monitor Bebe
+        icon_color: var(--rgb-state-light)
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255, 255, 255, 0.03) !important;
+              border: 1px solid rgba(255, 255, 255, 0.05) !important;
+              border-radius: 14px !important;
+              box-shadow: none !important;
+            }
+
+  # ---- Luces (auto-discovery por area) ----
+  - type: custom:button-card
+    template: section_header
+    variables:
+      section_icon: "mdi:lightbulb-group"
+      section_title: "Luces"
+
+  - type: custom:decluttering-card
+    template: auto_lights_grid
+    variables:
+      - area_name: "Cocina"
+
+  # ---- Musica ----
+  - type: custom:decluttering-card
+    template: media_section
+    variables:
+      - media_entity: media_player.cocina
+
+  # ---- Lavanderia ----
+  - type: custom:decluttering-card
+    template: lavanderia_section

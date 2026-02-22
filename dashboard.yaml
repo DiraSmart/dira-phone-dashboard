@@ -1,0 +1,18 @@
+title: Casa
+swipe_nav:
+  wrap: false
+  animate: swipe
+  animate_duration: 200
+  prevent_default: true
+  enable_on_subviews: false
+  swipe_amount: 15
+button_card_templates: !include templates/button_card_templates.yaml
+decluttering_templates: !include templates/decluttering_templates.yaml
+views:
+  - !include views/home.yaml
+  - !include views/rooms/sala.yaml
+  - !include views/rooms/cocina.yaml
+  - !include views/rooms/cuarto_principal.yaml
+  - !include views/rooms/cuarto_ninos.yaml
+  - !include views/rooms/juegos.yaml
+  - !include views/rooms/otros.yaml

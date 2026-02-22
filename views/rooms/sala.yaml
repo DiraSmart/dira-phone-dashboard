@@ -1,0 +1,46 @@
+title: Sala
+path: sala
+icon: mdi:sofa
+type: custom:vertical-layout
+subview: false
+cards:
+  # ---- Room Title ----
+  - type: custom:decluttering-card
+    template: room_title
+    variables:
+      - title: Sala
+      - icon: mdi:sofa
+      - back_url: /lovelace
+
+  # ---- Aire Acondicionado ----
+  - type: custom:decluttering-card
+    template: aire_section
+    variables:
+      - climate_entity: climate.t6_pro_z_wave_programmable_thermostat_with_smartstart
+      - thermostat_name: Aire Sala
+      - popup: "true"
+
+  # ---- Luces (auto-discovery por area) ----
+  - type: custom:button-card
+    template: section_header
+    variables:
+      section_icon: "mdi:lightbulb-group"
+      section_title: "Luces"
+
+  - type: custom:decluttering-card
+    template: auto_lights_grid
+    variables:
+      - area_name: "Sala"
+
+  # ---- Cortinas ----
+  - type: custom:decluttering-card
+    template: cortinas_section
+    variables:
+      - area_name: "Sala"
+
+  # ---- Musica ----
+  - type: custom:decluttering-card
+    template: mediocre_media_section
+    variables:
+      - media_entity: media_player.dietpi_airplay
+      - ma_entity: media_player.volumio_upnp_av

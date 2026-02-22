@@ -1,0 +1,108 @@
+# =============================================================================
+# CONFIGURACION DE ROOMS POR CLIENTE
+# =============================================================================
+# Este archivo es la referencia para cada despliegue.
+# Cambia los entity_id y area names segun el cliente.
+# Luego actualiza las vistas en views/rooms/ y views/home.yaml
+#
+# Cliente: Casa Brandon
+# Fecha: 2026-02-21
+# =============================================================================
+
+rooms:
+  - name: "Sala"
+    area: "Sala"                    # Nombre exacto del Area en HA
+    icon: "mdi:sofa"
+    path: "sala"
+    climate: "climate.t6_pro_z_wave_programmable_thermostat_with_smartstart"
+    temp_sensor: "sensor.t6_pro_z_wave_programmable_thermostat_with_smartstart_air_temperature"
+    humidity_sensor: "sensor.t6_pro_z_wave_programmable_thermostat_with_smartstart_humidity"
+    light_count_sensor: "sensor.lights_sala_on"
+    media_player: "media_player.dietpi_airplay"
+    media_icon: "mdi:cast-audio"
+    tv: null
+    has_covers: true
+    has_media_search: true          # Usa mediocre-media-player con busqueda
+    ma_entity: "media_player.volumio_upnp_av"
+
+  - name: "Cocina"
+    area: "Cocina"
+    icon: "mdi:stove"
+    path: "cocina"
+    climate: "climate.ac_cocina"
+    temp_sensor: "sensor.sensor_temp_cocina_temperature"
+    humidity_sensor: "sensor.sensor_temp_cocina_humidity"
+    light_count_sensor: "sensor.lights_cocina_on"
+    media_player: "media_player.cocina"
+    media_icon: "mdi:cast-audio"
+    tv: null
+    has_covers: false
+    has_media_search: false
+    extras:
+      - horno                       # Seccion especial de horno Samsung
+      - lavanderia                  # Seccion de lavadora/secadora
+      - monitor_bebe                # Switch plug cocina
+
+  - name: "Rec Principal"
+    area: "Cuarto Principal"
+    icon: "mdi:bed-king"
+    path: "cuarto-principal"
+    climate: "climate.ac_cuarto_principal"
+    temp_sensor: "sensor.sonoff_rec_principal_temperature"
+    humidity_sensor: "sensor.sonoff_rec_principal_humidity"
+    light_count_sensor: "sensor.lights_principal_on"
+    media_player: null
+    media_icon: null
+    tv:
+      state_entity: "sensor.state_tv_principal"
+      plug_entity: "switch.plug_tv_principal"
+      remote_service: "script.remote_tv_samsung"
+      lugar: "principal"
+    has_covers: false
+    has_media_search: false
+
+  - name: "Moishy Mushka"
+    area: "Cuarto Ninos"
+    icon: "phu:monzo"
+    path: "cuarto-ninos"
+    climate: "climate.ac_cuarto_ninos"
+    temp_sensor: "sensor.rec_ninos_temperature"
+    humidity_sensor: "sensor.rec_ninos_humidity"
+    light_count_sensor: "sensor.lights_ninos_on"
+    media_player: null
+    media_icon: null
+    tv: null
+    has_covers: false
+    has_media_search: false
+
+  - name: "Sche y Mendy"
+    area: "Cuarto Juegos"
+    icon: "mdi:sony-playstation"
+    path: "juegos"
+    climate: "climate.ac_cuarto_juegos"
+    temp_sensor: "sensor.sonoff_juegos_temperature"
+    humidity_sensor: "sensor.sonoff_juegos_humidity"
+    light_count_sensor: "sensor.lights_juegos_on"
+    media_player: null
+    media_icon: null
+    tv:
+      state_entity: "sensor.state_tv_juegos"
+      plug_entity: "switch.plug_tv_juegos"
+      remote_service: "script.remote_tv_samsung"
+      lugar: "juegos"
+    has_covers: false
+    has_media_search: false
+
+  - name: "Otros"
+    area: "Otros"
+    icon: "mdi:door"
+    path: "otros"
+    climate: null
+    temp_sensor: null
+    humidity_sensor: null
+    light_count_sensor: "sensor.lights_otros_on"
+    media_player: null
+    media_icon: null
+    tv: null
+    has_covers: false
+    has_media_search: false

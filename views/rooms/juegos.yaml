@@ -1,0 +1,51 @@
+title: Sche y Mendy
+path: juegos
+icon: mdi:sony-playstation
+type: custom:vertical-layout
+cards:
+  # ---- Room Title ----
+  - type: custom:decluttering-card
+    template: room_title
+    variables:
+      - title: Sche y Mendy
+      - icon: mdi:sony-playstation
+      - back_url: /lovelace
+
+  # ---- Aire Acondicionado ----
+  - type: custom:decluttering-card
+    template: aire_section
+    variables:
+      - climate_entity: climate.ac_cuarto_juegos
+      - thermostat_name: Aire Cuarto Juegos
+      - popup: "true"
+
+  # ---- TV ----
+  - type: custom:decluttering-card
+    template: tv_section
+    variables:
+      - popup_hash: "#tvjuegos"
+      - tv_state_entity: sensor.state_tv_juegos
+      - plug_entity: switch.plug_tv_juegos
+      - remote_service: script.remote_tv_samsung
+      - lugar: juegos
+
+  # ---- Luces (auto-discovery por area) ----
+  - type: custom:button-card
+    template: section_header
+    variables:
+      section_icon: "mdi:lightbulb-group"
+      section_title: "Luces"
+
+  - type: custom:decluttering-card
+    template: auto_lights_grid
+    variables:
+      - area_name: "Cuarto Juegos"
+
+  # ---- TV Remote Popup ----
+  - type: custom:decluttering-card
+    template: tv_remote_popup
+    variables:
+      - popup_hash: "#tvjuegos"
+      - popup_name: TV Juegos
+      - remote_service: script.remote_tv_samsung
+      - lugar: juegos

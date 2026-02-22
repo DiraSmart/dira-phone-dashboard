@@ -1,0 +1,24 @@
+title: Otros
+path: otros
+icon: mdi:door
+type: custom:vertical-layout
+cards:
+  # ---- Room Title ----
+  - type: custom:decluttering-card
+    template: room_title
+    variables:
+      - title: Otros
+      - icon: mdi:door
+      - back_url: /lovelace
+
+  # ---- Luces (auto-discovery por area) ----
+  - type: custom:button-card
+    template: section_header
+    variables:
+      section_icon: "mdi:lightbulb-group"
+      section_title: "Luces"
+
+  - type: custom:decluttering-card
+    template: auto_lights_grid
+    variables:
+      - area_name: "Otros"
