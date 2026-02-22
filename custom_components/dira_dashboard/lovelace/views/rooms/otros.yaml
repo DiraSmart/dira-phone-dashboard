@@ -9,7 +9,7 @@ cards:
     variables:
       - title: Otros
       - icon: mdi:door
-      - back_url: /lovelace
+      - back_url: /dira-dashboard
 
   # ---- Luces (auto-discovery por area) ----
   - type: custom:button-card

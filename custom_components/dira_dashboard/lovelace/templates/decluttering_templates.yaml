@@ -5,7 +5,7 @@ room_title:
   default:
     - title: "Room"
     - icon: "mdi:home"
-    - back_url: /lovelace
+    - back_url: /dira-dashboard
   card:
     type: custom:stack-in-card
     mode: horizontal

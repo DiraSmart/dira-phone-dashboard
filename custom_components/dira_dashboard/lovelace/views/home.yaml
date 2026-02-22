@@ -206,12 +206,14 @@ cards:
     type: grid
     columns: 2
     cards:
+      # Sala - Cyan
       - type: custom:button-card
         template: card_room
         variables:
           room_name: "Sala"
           room_icon: "mdi:sofa"
-          room_navigate: "/lovelace/sala"
+          room_color: "77, 208, 225"
+          room_navigate: "/dira-dashboard/sala"
           room_climate: climate.t6_pro_z_wave_programmable_thermostat_with_smartstart
           room_temp: sensor.t6_pro_z_wave_programmable_thermostat_with_smartstart_air_temperature
           room_humidity: sensor.t6_pro_z_wave_programmable_thermostat_with_smartstart_humidity
@@ -219,12 +221,14 @@ cards:
           room_media: media_player.dietpi_airplay
           room_media_icon: "mdi:cast-audio"
 
+      # Cocina - Orange
       - type: custom:button-card
         template: card_room
         variables:
           room_name: "Cocina"
           room_icon: "mdi:stove"
-          room_navigate: "/lovelace/cocina"
+          room_color: "255, 138, 101"
+          room_navigate: "/dira-dashboard/cocina"
           room_climate: climate.ac_cocina
           room_temp: sensor.sensor_temp_cocina_temperature
           room_humidity: sensor.sensor_temp_cocina_humidity
@@ -232,12 +236,14 @@ cards:
           room_media: media_player.cocina_2
           room_media_icon: "mdi:cast-audio"
 
+      # Rec Principal - Purple
       - type: custom:button-card
         template: card_room
         variables:
           room_name: "Rec Principal"
           room_icon: "mdi:bed-king"
-          room_navigate: "/lovelace/cuarto-principal"
+          room_color: "179, 136, 255"
+          room_navigate: "/dira-dashboard/cuarto-principal"
           room_climate: climate.ac_cuarto_principal
           room_temp: sensor.sonoff_rec_principal_temperature
           room_humidity: sensor.sonoff_rec_principal_humidity
@@ -245,12 +251,14 @@ cards:
           room_media: sensor.state_tv_principal
           room_media_icon: "mdi:television-shimmer"
 
+      # Moishy Mushka - Pink
       - type: custom:button-card
         template: card_room
         variables:
           room_name: "Moishy Mushka"
           room_icon: "phu:monzo"
-          room_navigate: "/lovelace/cuarto-ninos"
+          room_color: "244, 143, 177"
+          room_navigate: "/dira-dashboard/cuarto-ninos"
           room_climate: climate.ac_cuarto_ninos
           room_temp: sensor.rec_ninos_temperature
           room_humidity: sensor.rec_ninos_humidity
@@ -258,12 +266,14 @@ cards:
           room_media: "none"
           room_media_icon: "none"
 
+      # Sche y Mendy - Green
       - type: custom:button-card
         template: card_room
         variables:
           room_name: "Sche y Mendy"
           room_icon: "mdi:sony-playstation"
-          room_navigate: "/lovelace/juegos"
+          room_color: "105, 240, 174"
+          room_navigate: "/dira-dashboard/juegos"
           room_climate: climate.ac_cuarto_juegos
           room_temp: sensor.sonoff_juegos_temperature
           room_humidity: sensor.sonoff_juegos_humidity
@@ -271,12 +281,14 @@ cards:
           room_media: sensor.state_tv_juegos
           room_media_icon: "mdi:television-shimmer"
 
+      # Otros - Blue Grey
       - type: custom:button-card
         template: card_room
         variables:
           room_name: "Otros"
           room_icon: "mdi:door"
-          room_navigate: "/lovelace/otros"
+          room_color: "144, 164, 174"
+          room_navigate: "/dira-dashboard/otros"
           room_climate: "none"
           room_temp: "none"
           room_humidity: "none"

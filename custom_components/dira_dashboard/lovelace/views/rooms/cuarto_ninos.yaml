@@ -9,7 +9,7 @@ cards:
     variables:
       - title: Moishy Mushka
       - icon: phu:monzo
-      - back_url: /lovelace
+      - back_url: /dira-dashboard
 
   # ---- Aire Acondicionado ----
   - type: custom:decluttering-card
