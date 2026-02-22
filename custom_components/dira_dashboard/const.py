@@ -1,3 +1,3 @@
 DOMAIN = "dira_dashboard"
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 NAME = "Dira Dashboard"

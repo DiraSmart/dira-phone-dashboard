@@ -1,6 +1,5 @@
 # =============================================================================
-# card_room: Tarjeta de habitacion - Diseno moderno con color accent por room
-# Cada room tiene su propio color, icono en circulo, gradiente visible
+# card_room: Tarjeta de habitacion con color accent por room
 # =============================================================================
 card_room:
   variables:
@@ -15,32 +14,31 @@ card_room:
     room_media: "none"
     room_media_icon: "mdi:cast-audio"
   triggers_update:
-    - "[[[ return variables.room_climate ]]]"
-    - "[[[ return variables.room_lights ]]]"
-    - "[[[ return variables.room_temp ]]]"
-    - "[[[ return variables.room_humidity ]]]"
-    - "[[[ return variables.room_media ]]]"
-  entity: "[[[ return variables.room_climate !== 'none' ? variables.room_climate : (variables.room_temp !== 'none' ? variables.room_temp : undefined) ]]]"
+    - "[[[ return variables.room_climate !== 'none' ? variables.room_climate : '' ]]]"
+    - "[[[ return variables.room_lights !== 'none' ? variables.room_lights : '' ]]]"
+    - "[[[ return variables.room_temp !== 'none' ? variables.room_temp : '' ]]]"
+    - "[[[ return variables.room_humidity !== 'none' ? variables.room_humidity : '' ]]]"
+    - "[[[ return variables.room_media !== 'none' ? variables.room_media : '' ]]]"
   tap_action:
     action: navigate
     navigation_path: "[[[ return variables.room_navigate ]]]"
-  show_icon: false
-  show_name: false
+  show_icon: true
+  show_name: true
   show_state: false
   aspect_ratio: 1.2/1
+  icon: "[[[ return variables.room_icon ]]]"
+  name: "[[[ return variables.room_name ]]]"
   styles:
     card:
       - background: >
           [[[
             const c = variables.room_color;
             let active = false;
-            if (variables.room_climate !== 'none') {
-              let ac = states[variables.room_climate];
-              if (ac && ac.state !== 'off' && ac.state !== 'unavailable') active = true;
+            if (variables.room_climate !== 'none' && states[variables.room_climate]) {
+              if (states[variables.room_climate].state !== 'off' && states[variables.room_climate].state !== 'unavailable') active = true;
             }
-            if (variables.room_lights !== 'none') {
-              let lc = states[variables.room_lights];
-              if (lc && parseInt(lc.state) > 0) active = true;
+            if (variables.room_lights !== 'none' && states[variables.room_lights]) {
+              if (parseInt(states[variables.room_lights].state) > 0) active = true;
             }
             return active
               ? `linear-gradient(145deg, rgba(${c}, 0.18) 0%, rgba(${c}, 0.04) 50%, rgba(12, 12, 20, 0.95) 100%)`
@@ -50,192 +48,173 @@ card_room:
           [[[
             const c = variables.room_color;
             let active = false;
-            if (variables.room_climate !== 'none') {
-              let ac = states[variables.room_climate];
-              if (ac && ac.state !== 'off' && ac.state !== 'unavailable') active = true;
+            if (variables.room_climate !== 'none' && states[variables.room_climate]) {
+              if (states[variables.room_climate].state !== 'off' && states[variables.room_climate].state !== 'unavailable') active = true;
             }
-            if (variables.room_lights !== 'none') {
-              let lc = states[variables.room_lights];
-              if (lc && parseInt(lc.state) > 0) active = true;
+            if (variables.room_lights !== 'none' && states[variables.room_lights]) {
+              if (parseInt(states[variables.room_lights].state) > 0) active = true;
             }
             return active
               ? `1px solid rgba(${c}, 0.3)`
               : `1px solid rgba(255, 255, 255, 0.06)`;
           ]]]
       - border-radius: "20px"
-      - padding: "0"
-      - overflow: "hidden"
+      - padding: "16px"
       - box-shadow: >
           [[[
             const c = variables.room_color;
             let active = false;
-            if (variables.room_climate !== 'none') {
-              let ac = states[variables.room_climate];
-              if (ac && ac.state !== 'off' && ac.state !== 'unavailable') active = true;
+            if (variables.room_climate !== 'none' && states[variables.room_climate]) {
+              if (states[variables.room_climate].state !== 'off' && states[variables.room_climate].state !== 'unavailable') active = true;
             }
-            if (variables.room_lights !== 'none') {
-              let lc = states[variables.room_lights];
-              if (lc && parseInt(lc.state) > 0) active = true;
+            if (variables.room_lights !== 'none' && states[variables.room_lights]) {
+              if (parseInt(states[variables.room_lights].state) > 0) active = true;
             }
             return active
               ? `0 0 30px rgba(${c}, 0.15), 0 8px 32px rgba(0,0,0,0.4)`
               : `0 4px 20px rgba(0,0,0,0.3)`;
           ]]]
-      - transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
+      - transition: "all 0.4s ease"
     grid:
       - position: relative
-      - grid-template-areas: '"content"'
-      - grid-template-columns: 1fr
-      - grid-template-rows: 1fr
+      - grid-template-areas: '"icon_circle n" "icon_circle n" "aire aire" "temp temp" "bar bar"'
+      - grid-template-columns: "auto 1fr"
+      - grid-template-rows: "auto auto auto auto 4px"
+      - grid-gap: "0px"
+    icon:
+      - display: none
+    img_cell:
+      - display: none
+    name:
+      - font-size: "16px"
+      - font-weight: "700"
+      - color: "rgba(255, 255, 255, 0.93)"
+      - justify-self: start
+      - align-self: end
+      - padding-left: "12px"
+      - padding-bottom: "6px"
     custom_fields:
-      content:
-        - padding: "16px"
-        - display: flex
-        - flex-direction: column
-        - justify-content: space-between
-        - height: 100%
+      icon_circle:
+        - justify-self: start
+        - align-self: start
+        - margin-bottom: "8px"
+      badge_lights:
+        - position: absolute
+        - right: "0"
+        - top: "0"
+      badge_media:
+        - position: absolute
+        - right: "0"
+        - top: "34px"
+      aire:
+        - justify-self: start
+        - font-size: "12px"
+        - padding-top: "4px"
+      temp:
+        - justify-self: start
+        - font-size: "11px"
+        - color: "rgba(255, 255, 255, 0.35)"
+        - padding-bottom: "6px"
+      bar:
+        - justify-self: stretch
+        - height: "3px"
+        - border-radius: "2px"
   custom_fields:
-    content: |
+    icon_circle: |
       [[[
         const c = variables.room_color;
-
-        // --- Determine states ---
-        let acActive = false;
-        let acState = 'off';
-        let acTemp = '';
+        let active = false;
         if (variables.room_climate !== 'none' && states[variables.room_climate]) {
-          const climate = states[variables.room_climate];
-          acState = climate.state;
-          acTemp = climate.attributes.temperature || '';
-          if (acState !== 'off' && acState !== 'unavailable') acActive = true;
+          if (states[variables.room_climate].state !== 'off' && states[variables.room_climate].state !== 'unavailable') active = true;
         }
-
-        let tempVal = '';
-        if (variables.room_temp !== 'none' && states[variables.room_temp]) {
-          const t = states[variables.room_temp].state;
-          if (t !== 'unavailable') tempVal = Math.round(parseFloat(t));
-        }
-
-        let humVal = '';
-        if (variables.room_humidity !== 'none' && states[variables.room_humidity]) {
-          humVal = Math.round(parseFloat(states[variables.room_humidity].state));
-        }
-
-        let lightsOn = 0;
         if (variables.room_lights !== 'none' && states[variables.room_lights]) {
-          lightsOn = parseInt(states[variables.room_lights].state) || 0;
+          if (parseInt(states[variables.room_lights].state) > 0) active = true;
         }
-
-        let mediaActive = false;
-        if (variables.room_media !== 'none' && states[variables.room_media]) {
-          const ms = states[variables.room_media].state;
-          if (ms === 'on' || ms === 'playing') mediaActive = true;
+        const bg = active
+          ? `linear-gradient(135deg, rgba(${c}, 0.3), rgba(${c}, 0.1))`
+          : `rgba(255, 255, 255, 0.06)`;
+        const shadow = active
+          ? `0 0 20px rgba(${c}, 0.25)`
+          : `none`;
+        const iconFilter = active
+          ? `drop-shadow(0 0 6px rgba(${c}, 0.6))`
+          : `none`;
+        return `<div style="width:48px;height:48px;border-radius:14px;background:${bg};display:flex;align-items:center;justify-content:center;box-shadow:${shadow};">
+          <ha-icon icon="${variables.room_icon}" style="--mdc-icon-size:24px;color:rgb(${c});filter:${iconFilter};"></ha-icon>
+        </div>`;
+      ]]]
+    badge_lights: |
+      [[[
+        if (variables.room_lights === 'none' || !states[variables.room_lights]) return '';
+        const count = parseInt(states[variables.room_lights].state);
+        if (count > 0) {
+          return `<div style="display:flex;align-items:center;gap:3px;background:rgba(255,193,7,0.12);border:1px solid rgba(255,193,7,0.25);border-radius:10px;padding:3px 8px;">
+            <ha-icon icon="mdi:lightbulb" style="--mdc-icon-size:13px;color:#ffc107;"></ha-icon>
+            <span style="font-size:11px;font-weight:600;color:#ffc107;">${count}</span>
+          </div>`;
         }
-
-        // --- Mode display ---
+        return '';
+      ]]]
+    badge_media: |
+      [[[
+        if (variables.room_media === 'none' || !states[variables.room_media]) return '';
+        const ms = states[variables.room_media].state;
+        if (ms === 'on' || ms === 'playing') {
+          const c = variables.room_color;
+          return `<div style="background:rgba(${c},0.12);border:1px solid rgba(${c},0.25);border-radius:10px;padding:3px 6px;">
+            <ha-icon icon="${variables.room_media_icon}" style="--mdc-icon-size:13px;color:rgb(${c});"></ha-icon>
+          </div>`;
+        }
+        return '';
+      ]]]
+    aire: |
+      [[[
+        if (variables.room_climate === 'none' || !states[variables.room_climate]) return '';
+        const climate = states[variables.room_climate];
+        const acState = climate.state;
+        const acTemp = climate.attributes.temperature || '';
+        const c = variables.room_color;
         const modeMap = { heat_cool: 'Auto', fan_only: 'Fan', cool: 'Cool', heat: 'Heat', dry: 'Dry' };
-        const modeDisplay = modeMap[acState] || acState;
-
-        // --- Build HTML ---
-        let html = `
-          <div style="display: flex; flex-direction: column; gap: 10px; height: 100%;">
-
-            <!-- Top row: icon circle + badges -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-              <div style="
-                width: 48px; height: 48px;
-                border-radius: 14px;
-                background: ${acActive || lightsOn > 0
-                  ? `linear-gradient(135deg, rgba(${c}, 0.3), rgba(${c}, 0.1))`
-                  : `rgba(255, 255, 255, 0.06)`};
-                display: flex; align-items: center; justify-content: center;
-                box-shadow: ${acActive || lightsOn > 0
-                  ? `0 0 20px rgba(${c}, 0.25), inset 0 1px 0 rgba(255,255,255,0.1)`
-                  : `inset 0 1px 0 rgba(255,255,255,0.05)`};
-                transition: all 0.3s ease;
-              ">
-                <ha-icon icon="${variables.room_icon}" style="
-                  --mdc-icon-size: 24px;
-                  color: rgb(${c});
-                  filter: ${acActive || lightsOn > 0 ? `drop-shadow(0 0 6px rgba(${c}, 0.6))` : 'none'};
-                "></ha-icon>
-              </div>
-
-              <!-- Badges -->
-              <div style="display: flex; gap: 6px; align-items: center;">
-                ${lightsOn > 0 ? `
-                  <div style="
-                    display: flex; align-items: center; gap: 3px;
-                    background: rgba(255, 193, 7, 0.12);
-                    border: 1px solid rgba(255, 193, 7, 0.25);
-                    border-radius: 10px; padding: 3px 8px;
-                  ">
-                    <ha-icon icon="mdi:lightbulb" style="--mdc-icon-size: 13px; color: #ffc107;"></ha-icon>
-                    <span style="font-size: 11px; font-weight: 600; color: #ffc107;">${lightsOn}</span>
-                  </div>
-                ` : ''}
-                ${mediaActive ? `
-                  <div style="
-                    background: rgba(${c}, 0.12);
-                    border: 1px solid rgba(${c}, 0.25);
-                    border-radius: 10px; padding: 3px 6px;
-                  ">
-                    <ha-icon icon="${variables.room_media_icon}" style="--mdc-icon-size: 13px; color: rgb(${c});"></ha-icon>
-                  </div>
-                ` : ''}
-              </div>
-            </div>
-
-            <!-- Room name -->
-            <div style="flex: 1; display: flex; align-items: flex-end;">
-              <span style="
-                font-size: 16px; font-weight: 700;
-                color: rgba(255, 255, 255, 0.93);
-                letter-spacing: 0.01em;
-                line-height: 1.2;
-              ">${variables.room_name}</span>
-            </div>
-
-            <!-- Status bar: AC + Temp -->
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              ${variables.room_climate !== 'none' ? `
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <div style="
-                    width: 6px; height: 6px; border-radius: 50%;
-                    background: ${acActive ? `rgb(${c})` : 'rgba(255,255,255,0.15)'};
-                    box-shadow: ${acActive ? `0 0 8px rgba(${c}, 0.6)` : 'none'};
-                  "></div>
-                  <span style="
-                    font-size: 12px; font-weight: 500;
-                    color: ${acActive ? `rgba(${c}, 0.9)` : 'rgba(255,255,255,0.3)'};
-                    text-transform: capitalize;
-                  ">${acActive ? `${modeDisplay} ${acTemp}°` : 'Off'}</span>
-                </div>
-              ` : ''}
-              ${tempVal ? `
-                <div style="display: flex; align-items: center; gap: 6px;">
-                  <span style="font-size: 11px; color: rgba(255,255,255,0.35);">
-                    ${tempVal}° ${humVal ? `· ${humVal}%` : ''}
-                  </span>
-                </div>
-              ` : ''}
-            </div>
-
-            <!-- Bottom accent line -->
-            <div style="
-              height: 3px; border-radius: 2px; margin-top: 2px;
-              background: ${acActive || lightsOn > 0
-                ? `linear-gradient(90deg, rgba(${c}, 0.6), rgba(${c}, 0.1))`
-                : `rgba(255, 255, 255, 0.04)`};
-              transition: all 0.4s ease;
-            "></div>
-          </div>
-        `;
-        return html;
+        const mode = modeMap[acState] || acState;
+        const active = acState !== 'off' && acState !== 'unavailable';
+        const dotColor = active ? `rgb(${c})` : 'rgba(255,255,255,0.15)';
+        const dotShadow = active ? `0 0 8px rgba(${c},0.6)` : 'none';
+        const textColor = active ? `rgba(${c},0.9)` : 'rgba(255,255,255,0.3)';
+        return `<div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:${dotColor};box-shadow:${dotShadow};"></div>
+          <span style="font-size:12px;font-weight:500;color:${textColor};text-transform:capitalize;">${active ? mode + ' ' + acTemp + '°' : 'Off'}</span>
+        </div>`;
+      ]]]
+    temp: |
+      [[[
+        if (variables.room_temp === 'none' || !states[variables.room_temp]) return '';
+        const t = states[variables.room_temp].state;
+        if (t === 'unavailable') return '';
+        const temp = Math.round(parseFloat(t));
+        let hum = '';
+        if (variables.room_humidity !== 'none' && states[variables.room_humidity]) {
+          hum = Math.round(parseFloat(states[variables.room_humidity].state));
+        }
+        return `<span>${temp}° ${hum ? '· ' + hum + '%' : ''}</span>`;
+      ]]]
+    bar: |
+      [[[
+        const c = variables.room_color;
+        let active = false;
+        if (variables.room_climate !== 'none' && states[variables.room_climate]) {
+          if (states[variables.room_climate].state !== 'off' && states[variables.room_climate].state !== 'unavailable') active = true;
+        }
+        if (variables.room_lights !== 'none' && states[variables.room_lights]) {
+          if (parseInt(states[variables.room_lights].state) > 0) active = true;
+        }
+        const bg = active
+          ? `linear-gradient(90deg, rgba(${c},0.6), rgba(${c},0.1))`
+          : `rgba(255,255,255,0.04)`;
+        return `<div style="height:3px;border-radius:2px;background:${bg};width:100%;"></div>`;
       ]]]
 
 # =============================================================================
-# section_header: Separador de seccion moderno
+# section_header: Separador de seccion
 # =============================================================================
 section_header:
   variables:
