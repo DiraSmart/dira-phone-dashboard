@@ -1,0 +1,5 @@
+{
+  "name": "Dira Phone Dashboard",
+  "render": ["themes"],
+  "homeassistant": "2024.0.0"
+}
